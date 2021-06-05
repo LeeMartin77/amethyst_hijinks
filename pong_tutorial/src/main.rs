@@ -8,11 +8,13 @@ use amethyst::{
     ui::{RenderUi, UiBundle},
     utils::application_root_dir,
     core::transform::TransformBundle,
-    input::{InputBundle, StringBindings}
+    input::{InputBundle, StringBindings},
+    audio::AudioBundle
 };
 
 mod pong;
 mod systems;
+mod audio;
 
 use crate::pong::Pong;
 
@@ -38,6 +40,7 @@ fn main() -> amethyst::Result<()> {
         &["paddle_system", "ball_system"],
     )
     .with(systems::WinnerSystem, "winner_system", &["ball_system"])
+    .with_bundle(AudioBundle::default())?
     .with_bundle(
         RenderingBundle::<DefaultBackend>::new()
             // The RenderToWindow plugin provides all the scaffolding for opening a window and drawing on it
