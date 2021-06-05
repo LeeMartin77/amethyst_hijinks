@@ -11,11 +11,31 @@ use amethyst::{
 
 #[derive(Default)]
 pub struct Orbital {
+    sprite_sheet_handle: Option<Handle<SpriteSheet>>,
+}
+
+
+pub struct Planet {
+    pub radius: f32,
+}
+
+impl Planet {
+    fn new(radius: f32) -> Planet {
+        Planet {
+            radius
+        }
+    }
+}
+
+impl Component for Planet {
+    type Storage = DenseVecStorage<Self>;
 }
 
 impl SimpleState for Orbital {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
+        self.sprite_sheet_handle.replace(load_sprite_sheet(world));
+        initialise_planet(world, self.sprite_sheet_handle.clone().unwrap());
         initialise_camera(world);
     }
 
@@ -35,5 +55,43 @@ fn initialise_camera(world: &mut World) {
         .create_entity()
         .with(Camera::standard_2d(screen_width, screen_height))
         .with(transform)
+        .build();
+}
+
+fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
+    let texture_handle = {
+        let loader = world.read_resource::<Loader>();
+        let texture_storage = world.read_resource::<AssetStorage<Texture>>();
+        loader.load(
+            "texture/rough_sprites.png",
+            ImageFormat::default(),
+            (),
+            &texture_storage,
+        )
+    };
+
+    let loader = world.read_resource::<Loader>();
+    let sprite_sheet_store = world.read_resource::<AssetStorage<SpriteSheet>>();
+    loader.load(
+        "texture/rough_sprites.ron", // Here we load the associated ron file
+        SpriteSheetFormat(texture_handle),
+        (),
+        &sprite_sheet_store,
+    )
+}
+
+fn initialise_planet(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+    let mut planet_transform = Transform::default();
+    let sprite_render = SpriteRender::new(sprite_sheet_handle, 0);
+
+    let x = 1280.0 / 2.0;
+    let y = 720.0 / 2.0;
+    planet_transform.set_translation_xyz(x, y, 0.0);
+
+    world
+        .create_entity()
+        .with(sprite_render.clone())
+        .with(Planet::new(528.0 * 0.5))
+        .with(planet_transform)
         .build();
 }
