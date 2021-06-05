@@ -4,7 +4,7 @@ I'm interested in learning about Rust, and Amethyst looks like a really cool fra
 
 ## Running in debian
 
-There is a bit of a breaking bug against wayland in debian right now. In order to use the latest stable of amethyst, you'll need to do the following:
+There is a bit of a breaking bug against wayland in debian right now. In order to use the latest stable of amethyst (15.3 at time of writing), you'll need to do the following:
 
 ### Disable Wayland and use X11
 
