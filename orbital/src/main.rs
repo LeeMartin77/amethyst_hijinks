@@ -14,6 +14,7 @@ use amethyst::{
 mod orbital;
 mod systems;
 
+
 use crate::orbital::Orbital;
 
 fn main() -> amethyst::Result<()> {

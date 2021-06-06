@@ -17,12 +17,14 @@ pub struct Orbital {
 
 pub struct Planet {
     pub radius: f32,
+    pub mass: f32,
 }
 
 impl Planet {
-    fn new(radius: f32) -> Planet {
+    fn new(radius: f32, mass: f32) -> Planet {
         Planet {
-            radius
+            radius,
+            mass
         }
     }
 }
@@ -32,13 +34,15 @@ impl Component for Planet {
 }
 
 pub struct MovingObject {
-    pub velocity: [f32; 2]
+    pub velocity: [f32; 2],
+    pub mass: f32
 }
 
 impl MovingObject {
-    fn new(velocity: [f32; 2]) -> MovingObject {
+    fn new(velocity: [f32; 2], mass: f32) -> MovingObject {
         MovingObject { 
-            velocity
+            velocity,
+            mass
         }
     }
 }
@@ -106,7 +110,7 @@ fn initialise_planet(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
     world
         .create_entity()
         .with(sprite_render.clone())
-        .with(Planet::new(528.0 * 0.5))
+        .with(Planet::new(528.0 * 0.5, 1000.0))
         .with(planet_transform)
         .build();
 }
@@ -122,6 +126,6 @@ fn initialise_ship(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) 
         .create_entity()
         .with(sprite_render.clone())
         .with(ship_transform)
-        .with(MovingObject::new([0.5, 0.5]))
+        .with(MovingObject::new([0.5, 0.5], 0.0005))
         .build();
 }
