@@ -4,18 +4,19 @@ use amethyst::ecs::{Join, Read, ReadStorage, System, SystemData, World, WriteSto
 use amethyst::input::{InputHandler, StringBindings};
 
 // You'll have to mark PADDLE_HEIGHT as public in pong.rs
-use crate::orbital::{Planet};
+use crate::orbital::{Planet, Ship};
 
 #[derive(SystemDesc)]
-pub struct PlanetSystem;
+pub struct GravitySystem;
 
-impl<'s> System<'s> for PlanetSystem {
+impl<'s> System<'s> for GravitySystem {
     type SystemData = (
         WriteStorage<'s, Transform>,
-        ReadStorage<'s, Planet>
+        ReadStorage<'s, Planet>,
+        WriteStorage<'s, Ship>
     );
 
-    fn run(&mut self, (mut transforms, planets): Self::SystemData) {
+    fn run(&mut self, (mut transforms, planets, mut ships): Self::SystemData) {
 
     }
 }

@@ -31,11 +31,25 @@ impl Component for Planet {
     type Storage = DenseVecStorage<Self>;
 }
 
+pub struct Ship {
+}
+
+impl Ship {
+    fn new() -> Ship {
+        Ship { }
+    }
+}
+
+impl Component for Ship {
+    type Storage = DenseVecStorage<Self>;
+}
+
 impl SimpleState for Orbital {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
         self.sprite_sheet_handle.replace(load_sprite_sheet(world));
         initialise_planet(world, self.sprite_sheet_handle.clone().unwrap());
+        initialise_ship(world, self.sprite_sheet_handle.clone().unwrap());
         initialise_camera(world);
     }
 
@@ -49,11 +63,11 @@ fn initialise_camera(world: &mut World) {
     let mut transform = Transform::default();
     let screen_width = world.read_resource::<ScreenDimensions>().width();
     let screen_height = world.read_resource::<ScreenDimensions>().height();
-    transform.set_translation_xyz(screen_width.clone() * 0.5, screen_height.clone() * 0.5, 1.0);
+    transform.set_translation_xyz(0.0, 0.0, 1.0);
 
     world
         .create_entity()
-        .with(Camera::standard_2d(screen_width, screen_height))
+        .with(Camera::standard_2d(screen_width * 4.0, screen_height * 4.0))
         .with(transform)
         .build();
 }
@@ -84,14 +98,27 @@ fn initialise_planet(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
     let mut planet_transform = Transform::default();
     let sprite_render = SpriteRender::new(sprite_sheet_handle, 0);
 
-    let x = 1280.0 / 2.0;
-    let y = 720.0 / 2.0;
-    planet_transform.set_translation_xyz(x, y, 0.0);
+    planet_transform.set_translation_xyz(0.0, 0.0, 0.0);
 
     world
         .create_entity()
         .with(sprite_render.clone())
         .with(Planet::new(528.0 * 0.5))
+        .with(planet_transform)
+        .build();
+}
+
+
+fn initialise_ship(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+    let mut planet_transform = Transform::default();
+    let sprite_render = SpriteRender::new(sprite_sheet_handle, 1);
+
+    planet_transform.set_translation_xyz(0.0, 720.0, 0.0);
+
+    world
+        .create_entity()
+        .with(sprite_render.clone())
+        .with(Ship::new())
         .with(planet_transform)
         .build();
 }

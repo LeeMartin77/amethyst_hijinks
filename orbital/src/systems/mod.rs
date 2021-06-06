@@ -1,3 +1,3 @@
-pub use self::planet::PlanetSystem;
+pub use self::gravity::GravitySystem;
 
-mod planet;
+mod gravity;
