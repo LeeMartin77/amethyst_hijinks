@@ -32,7 +32,7 @@ impl Component for Planet {
 }
 
 pub struct MovingObject {
-    velocity: [f32; 2]
+    pub velocity: [f32; 2]
 }
 
 impl MovingObject {
@@ -122,6 +122,6 @@ fn initialise_ship(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) 
         .create_entity()
         .with(sprite_render.clone())
         .with(ship_transform)
-        .with(MovingObject::new([0.0, 0.0]))
+        .with(MovingObject::new([0.5, 0.5]))
         .build();
 }

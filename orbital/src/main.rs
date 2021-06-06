@@ -28,8 +28,8 @@ fn main() -> amethyst::Result<()> {
 
     let game_data = GameDataBuilder::default()
     .with_bundle(TransformBundle::new())?
-    .with(systems::GravitySystem, "gravity_system", &[])
     .with(systems::VelocitySystem, "velocity_system", &[])
+    .with(systems::GravitySystem, "gravity_system", &["velocity_system"])
     .with_bundle(input_bundle)?
     .with_bundle(UiBundle::<StringBindings>::new())?
     .with_bundle(
