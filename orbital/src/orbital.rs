@@ -31,16 +31,19 @@ impl Component for Planet {
     type Storage = DenseVecStorage<Self>;
 }
 
-pub struct Ship {
+pub struct MovingObject {
+    velocity: [f32; 2]
 }
 
-impl Ship {
-    fn new() -> Ship {
-        Ship { }
+impl MovingObject {
+    fn new(velocity: [f32; 2]) -> MovingObject {
+        MovingObject { 
+            velocity
+        }
     }
 }
 
-impl Component for Ship {
+impl Component for MovingObject {
     type Storage = DenseVecStorage<Self>;
 }
 
@@ -110,15 +113,15 @@ fn initialise_planet(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
 
 
 fn initialise_ship(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
-    let mut planet_transform = Transform::default();
+    let mut ship_transform = Transform::default();
     let sprite_render = SpriteRender::new(sprite_sheet_handle, 1);
 
-    planet_transform.set_translation_xyz(0.0, 720.0, 0.0);
+    ship_transform.set_translation_xyz(0.0, 720.0, 0.0);
 
     world
         .create_entity()
         .with(sprite_render.clone())
-        .with(Ship::new())
-        .with(planet_transform)
+        .with(ship_transform)
+        .with(MovingObject::new([0.0, 0.0]))
         .build();
 }
