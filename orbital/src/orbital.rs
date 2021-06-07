@@ -1,9 +1,8 @@
 use amethyst::{
     assets::{AssetStorage, Loader, Handle},
     core::transform::Transform,
-    ecs::{Component, DenseVecStorage, Entity},
     prelude::*,
-    renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture },
+    renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, Texture },
     window::ScreenDimensions,
     ui::{Anchor, LineMode, TtfFormat, UiText, UiTransform},
     core::timing::Time
@@ -29,10 +28,6 @@ impl Planet {
     }
 }
 
-impl Component for Planet {
-    type Storage = DenseVecStorage<Self>;
-}
-
 pub struct MovingObject {
     pub velocity: [f32; 2],
     pub mass: f32
@@ -47,12 +42,8 @@ impl MovingObject {
     }
 }
 
-impl Component for MovingObject {
-    type Storage = DenseVecStorage<Self>;
-}
-
 impl SimpleState for Orbital {
-    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+    fn on_start(&mut self, data: StateData<'_, GameData>) {
         let world = data.world;
         self.sprite_sheet_handle.replace(load_sprite_sheet(world));
         initialise_planet(world, self.sprite_sheet_handle.clone().unwrap());
@@ -60,7 +51,7 @@ impl SimpleState for Orbital {
         initialise_camera(world);
     }
 
-    fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
+    fn update(&mut self, data: &mut StateData<'_, GameData>) -> SimpleTrans {
         Trans::None
     }
 }
@@ -72,11 +63,7 @@ fn initialise_camera(world: &mut World) {
     let screen_height = world.read_resource::<ScreenDimensions>().height();
     transform.set_translation_xyz(0.0, 0.0, 1.0);
 
-    world
-        .create_entity()
-        .with(Camera::standard_2d(screen_width * 4.0, screen_height * 4.0))
-        .with(transform)
-        .build();
+    world.push((Camera::standard_2d(screen_width * 4.0, screen_height * 4.0), transform));
 }
 
 fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
@@ -107,12 +94,7 @@ fn initialise_planet(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
 
     planet_transform.set_translation_xyz(0.0, 0.0, 0.0);
 
-    world
-        .create_entity()
-        .with(sprite_render.clone())
-        .with(Planet::new(528.0 * 0.5, 1000.0))
-        .with(planet_transform)
-        .build();
+    world.push((Planet::new(528.0 * 0.5, 1000.0), sprite_render.clone(), planet_transform));
 }
 
 
@@ -122,10 +104,5 @@ fn initialise_ship(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) 
 
     ship_transform.set_translation_xyz(0.0, 720.0, 0.0);
 
-    world
-        .create_entity()
-        .with(sprite_render.clone())
-        .with(ship_transform)
-        .with(MovingObject::new([0.5, 0.5], 0.0005))
-        .build();
+    world.push((MovingObject::new([0.5, 0.5], 0.0005), ship_transform, sprite_render.clone()));
 }

@@ -26,7 +26,7 @@ impl<'s> System<'s> for GravitySystem {
                 //We should definitely not be calcing this constantly.
                 //https://en.wikipedia.org/wiki/Gravitational_constant
                 let gravitational_constant = 6.674; //* Math.Pow(10d, -11d);
-                let force = gravitational_constant * ((moving_object.mass * planet.mass) / distance(moving_local.translation(), planet_local.translation())); //Vector2.Distance(mobileEntity.Position, staticEntity.Position));
+                //let force = gravitational_constant * ((moving_object.mass * planet.mass) / distance(moving_local.translation(), planet_local.translation())); //Vector2.Distance(mobileEntity.Position, staticEntity.Position));
                 //F=MA
                 //A = F/M
                 //var acceleration = force / mobileEntity.Mass;
@@ -35,12 +35,12 @@ impl<'s> System<'s> for GravitySystem {
                 //var distance = (float)(acceleration * gameTime.ElapsedGameTime.TotalSeconds);
                 //var normalisedVector = Vector2.Normalize(staticEntity.Position - mobileEntity.Position);
                 //return new Vector2(normalisedVector.X * distance, normalisedVector.Y * distance);
-                if distance(moving_local.translation(), planet_local.translation()) < planet.radius {
+                //if distance(moving_local.translation(), planet_local.translation()) < planet.radius {
                     //If the object is in/on the planet, it needs to stop moving
                     //This will be a gameover at some point
                     //This probably won't actually work but is a statement of intent
-                    moving_object.velocity = [0.0, 0.0]
-                }
+                //    moving_object.velocity = [0.0, 0.0]
+                //}
             }
         }
     }
