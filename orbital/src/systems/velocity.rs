@@ -1,26 +1,22 @@
-use amethyst::core::{Transform, SystemDesc};
+use amethyst::core::{Transform};
 use amethyst::core::timing::Time;
-use amethyst::derive::SystemDesc;
-use amethyst::ecs::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage};
-use amethyst::input::{InputHandler, StringBindings};
+use amethyst::ecs::{System, World, SystemBuilder};
 
-// You'll have to mark PADDLE_HEIGHT as public in pong.rs
 use crate::orbital::{MovingObject};
-
-#[derive(SystemDesc)]
-pub struct VelocitySystem;
-
-impl<'s> System<'s> for VelocitySystem {
-    type SystemData = (
-        WriteStorage<'s, Transform>,
-        WriteStorage<'s, MovingObject>,
-        Read<'s, Time>,
-    );
-
-    fn run(&mut self, (mut transforms, mut moving_objects, time): Self::SystemData) {
-        for (moving_object, local) in (&moving_objects, &mut transforms).join() {
-            local.prepend_translation_x(moving_object.velocity[0] * time.delta_seconds());
-            local.prepend_translation_y(moving_object.velocity[1] * time.delta_seconds());
-        }
-    }
+// Legion RFC is the thing to read 
+// https://github.com/amethyst/rfcs/issues/22
+fn build_velocity_system(
+    world: &mut amethyst::ecs::World,
+) -> Box<dyn amethyst::ecs::Schedulable> 
+{
+    SystemBuilder::<()>::new("VelocitySystem")
+        .write_component::<MovingObject>()
+        .write_component::<Transform>()
+        .read_resource::<Time>()
+        .build(move | commands, world, (moving_objects, transforms, time), query | {
+            for (moving_object, local) in (&moving_objects, &mut transforms).join() {
+                local.prepend_translation_x(moving_object.velocity[0] * time.delta_seconds());
+                local.prepend_translation_y(moving_object.velocity[1] * time.delta_seconds());
+            }
+        })
 }

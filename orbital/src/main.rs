@@ -26,14 +26,14 @@ fn main() -> amethyst::Result<()> {
 
     let input_bundle = InputBundle::new().with_bindings_from_file(binding_path)?;
 
-    let ui_bundle = UiBundle::new();
+    //let ui_bundle = UiBundle::new();
 
     let game_data = DispatcherBuilder::default()
     .add_bundle(TransformBundle)
     .add_system(systems::VelocitySystem)//, "velocity_system", &[]
     .add_system(systems::GravitySystem)//, "gravity_system", &["velocity_system"]
     .add_bundle(input_bundle)
-    .add_bundle(ui_bundle)
+    //.add_bundle(ui_bundle)
     .add_bundle(
         RenderingBundle::<DefaultBackend>::new()
             // The RenderToWindow plugin provides all the scaffolding for opening a window and drawing on it
@@ -45,8 +45,8 @@ fn main() -> amethyst::Result<()> {
             .with_plugin(RenderUi::default()),
     );
 
-    let assets_dir = app_root.join("assets");
-    let mut game = Application::new(assets_dir, Orbital::default(), game_data)?;
-    game.run();
+    //let assets_dir = app_root.join("assets");
+    //let mut game = Application::build(assets_dir, Orbital::default())?.build(())?;
+    //game.run();
     Ok(())
 }
