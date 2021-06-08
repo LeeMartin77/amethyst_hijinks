@@ -1,5 +1,6 @@
 mod orbital;
 mod systems;
+mod bundle;
 
 use amethyst::{
     assets::LoaderBundle,
@@ -18,6 +19,8 @@ use amethyst::{
 
 use crate::orbital::Orbital;
 
+use crate::bundle::OrbitalBundle;
+
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
     let app_root = application_root_dir()?;
@@ -30,8 +33,7 @@ fn main() -> amethyst::Result<()> {
     let mut game_data = DispatcherBuilder::default();
         game_data.add_bundle(TransformBundle)
         .add_bundle(LoaderBundle)
-        .add_system(systems::VelocitySystem)
-        //.add_system(systems::GravitySystem)
+        .add_bundle(OrbitalBundle)
         .add_bundle(input_bundle)
         .add_bundle(UiBundle::<u32>::default())
         .add_bundle(
