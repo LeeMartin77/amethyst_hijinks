@@ -31,10 +31,11 @@ fn main() -> amethyst::Result<()> {
 
 
     let mut game_data = DispatcherBuilder::default();
-        game_data.add_bundle(TransformBundle)
+        game_data
         .add_bundle(LoaderBundle)
-        .add_bundle(OrbitalBundle)
+        .add_bundle(TransformBundle)
         .add_bundle(input_bundle)
+        .add_bundle(OrbitalBundle)
         .add_bundle(UiBundle::<u32>::default())
         .add_bundle(
             RenderingBundle::<DefaultBackend>::new()
