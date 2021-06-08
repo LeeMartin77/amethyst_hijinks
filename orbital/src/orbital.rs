@@ -1,11 +1,9 @@
 use amethyst::{
-    assets::{AssetStorage, Loader, Handle},
+    assets::{DefaultLoader, Handle, Loader, ProcessingQueue},
     core::transform::Transform,
     prelude::*,
-    renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, Texture },
-    window::ScreenDimensions,
-    ui::{Anchor, LineMode, TtfFormat, UiText, UiTransform},
-    core::timing::Time
+    renderer::{sprite::Sprites, Camera, SpriteRender, SpriteSheet},
+    window::ScreenDimensions
 };
 
 #[derive(Default)]
@@ -44,11 +42,13 @@ impl MovingObject {
 
 impl SimpleState for Orbital {
     fn on_start(&mut self, data: StateData<'_, GameData>) {
-        let world = data.world;
-        //self.sprite_sheet_handle.replace(load_sprite_sheet(world));
-        //initialise_planet(world, self.sprite_sheet_handle.clone().unwrap());
-        //initialise_ship(world, self.sprite_sheet_handle.clone().unwrap());
-        //initialise_camera(world);
+        let StateData {
+            world, resources, ..
+        } = data;
+        self.sprite_sheet_handle.replace(load_sprite_sheet(resources));
+        initialise_planet(world, self.sprite_sheet_handle.clone().unwrap());
+        initialise_ship(world, self.sprite_sheet_handle.clone().unwrap());
+        initialise_camera(world, resources);
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData>) -> SimpleTrans {
@@ -56,37 +56,32 @@ impl SimpleState for Orbital {
     }
 }
 
-fn initialise_camera(world: &mut World) {
-    // Setup camera in a way that our screen covers whole arena and (0, 0) is in the bottom left.
+fn initialise_camera(world: &mut World, resources: &mut Resources) {
     let mut transform = Transform::default();
-    // let screen_width = world.read_resource::<ScreenDimensions>().width();
-    // let screen_height = world.read_resource::<ScreenDimensions>().height();
-    // transform.set_translation_xyz(0.0, 0.0, 1.0);
+    let screen_width = resources.get::<ScreenDimensions>().unwrap().width();
+    let screen_height = resources.get::<ScreenDimensions>().unwrap().height();
+    transform.set_translation_xyz(0.0, 0.0, 1.0);
 
-    // world.push((Camera::standard_2d(screen_width * 4.0, screen_height * 4.0), transform));
+    world.push((Camera::standard_2d(screen_width * 4.0, screen_height * 4.0), transform));
 }
 
-// fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
-//     let texture_handle = {
-//         let loader = world.read_resource::<Loader>();
-//         let texture_storage = world.read_resource::<AssetStorage<Texture>>();
-//         loader.load(
-//             "texture/rough_sprites.png",
-//             ImageFormat::default(),
-//             (),
-//             &texture_storage,
-//         )
-//     };
+fn load_sprite_sheet(resources: &mut Resources) -> Handle<SpriteSheet> {
+    let texture_handle = {
+        let loader = resources.get::<DefaultLoader>().unwrap();
+        loader.load("texture/rough_sprites.png")
+    };
 
-//     let loader = world.read_resource::<Loader>();
-//     let sprite_sheet_store = world.read_resource::<AssetStorage<SpriteSheet>>();
-//     loader.load(
-//         "texture/rough_sprites.ron", // Here we load the associated ron file
-//         SpriteSheetFormat(texture_handle),
-//         (),
-//         &sprite_sheet_store,
-//     )
-// }
+    let loader = resources.get::<DefaultLoader>().unwrap();
+    let sprites: Handle<Sprites> = loader.load(
+        "texture/rough_sprites.ron", // Here we load the associated ron file
+    );
+    let sheet = SpriteSheet {
+        texture: texture_handle,
+        sprites,
+    };
+    let q = resources.get::<ProcessingQueue<SpriteSheet>>().unwrap();
+    loader.load_from_data(sheet, (), &q)
+}
 
 fn initialise_planet(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let mut planet_transform = Transform::default();

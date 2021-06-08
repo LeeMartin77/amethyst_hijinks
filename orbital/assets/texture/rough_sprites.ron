@@ -1,4 +1,7 @@
-List((
+
+{
+    "04c60333-c790-4586-aa76-086b19167a04":
+    List((
     texture_width: 800,
     texture_height: 800,
     sprites: [
@@ -15,4 +18,5 @@ List((
             height: 200,
         ),
     ],
-))
+    ))
+}
