@@ -15,7 +15,7 @@ impl System for VelocitySystem {
         SystemBuilder::new("VelocitySystem")
 
             .with_query(<(&MovingObject, &mut Transform)>::query())
-            .write_component::<MovingObject>()
+            .read_component::<MovingObject>()
             .write_component::<Transform>()
             .read_resource::<Time>()
             .build(move | _commands, world, time, query_objects | {
