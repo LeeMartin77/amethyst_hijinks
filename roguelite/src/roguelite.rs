@@ -7,11 +7,11 @@ use amethyst::{
 };
 
 #[derive(Default)]
-pub struct Roguelike {
+pub struct Roguelite {
     sprite_sheet_handle: Option<Handle<SpriteSheet>>,
 }
 
-impl SimpleState for Roguelike {
+impl SimpleState for Roguelite {
     fn on_start(&mut self, data: StateData<'_, GameData>) {
         let StateData {
             world, resources, ..

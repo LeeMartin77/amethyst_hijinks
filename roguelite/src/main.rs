@@ -1,4 +1,4 @@
-mod roguelike;
+mod roguelite;
 mod systems;
 mod bundle;
 
@@ -17,9 +17,9 @@ use amethyst::{
     utils::application_root_dir,
 };
 
-use crate::roguelike::Roguelike;
+use crate::roguelite::Roguelite;
 
-use crate::bundle::RoguelikeBundle;
+use crate::bundle::RogueliteBundle;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -35,7 +35,7 @@ fn main() -> amethyst::Result<()> {
         .add_bundle(LoaderBundle)
         .add_bundle(TransformBundle)
         .add_bundle(input_bundle)
-        .add_bundle(RoguelikeBundle)
+        .add_bundle(RogueliteBundle)
         .add_bundle(UiBundle::<u32>::default())
         .add_bundle(
             RenderingBundle::<DefaultBackend>::new()
@@ -49,7 +49,7 @@ fn main() -> amethyst::Result<()> {
     );
 
     let assets_dir = app_root.join("assets");
-    let game = Application::new(assets_dir, Roguelike::default(), game_data)?;
+    let game = Application::new(assets_dir, Roguelite::default(), game_data)?;
     game.run();
     Ok(())
 }

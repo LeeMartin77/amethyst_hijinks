@@ -11,9 +11,9 @@ use crate::systems::{
 
 /// A bundle is a convenient way to initialize related resources, components and systems in a
 /// world.
-pub struct RoguelikeBundle;
+pub struct RogueliteBundle;
 
-impl SystemBundle for RoguelikeBundle {
+impl SystemBundle for RogueliteBundle {
     fn load(
         &mut self,
         _world: &mut World,
