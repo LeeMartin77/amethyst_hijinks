@@ -6,9 +6,12 @@ use amethyst::{
     window::ScreenDimensions
 };
 
+use crate::entities::{ 
+    player_character::PlayerCharacter
+};
+
 #[derive(Default)]
 pub struct Roguelite {
-    sprite_sheet_handle: Option<Handle<SpriteSheet>>,
 }
 
 impl SimpleState for Roguelite {
@@ -16,11 +19,11 @@ impl SimpleState for Roguelite {
         let StateData {
             world, resources, ..
         } = data;
-        self.sprite_sheet_handle.replace(load_sprite_sheet(resources));
+        initialise_player(world, resources);
         initialise_camera(world, resources);
     }
 
-    fn update(&mut self, data: &mut StateData<'_, GameData>) -> SimpleTrans {
+    fn update(&mut self, _data: &mut StateData<'_, GameData>) -> SimpleTrans {
         Trans::None
     }
 }
@@ -31,23 +34,17 @@ fn initialise_camera(world: &mut World, resources: &mut Resources) {
     let screen_height = resources.get::<ScreenDimensions>().unwrap().height();
     transform.set_translation_xyz(0.0, 0.0, 1.0);
 
-    world.push((Camera::standard_2d(screen_width * 4.0, screen_height * 4.0), transform));
+    world.push((Camera::standard_2d(screen_width * 0.5, screen_height * 0.5), transform));
 }
 
-fn load_sprite_sheet(resources: &mut Resources) -> Handle<SpriteSheet> {
-    let texture_handle = {
-        let loader = resources.get::<DefaultLoader>().unwrap();
-        loader.load("texture/rough_sprites.png")
-    };
 
-    let loader = resources.get::<DefaultLoader>().unwrap();
-    let sprites: Handle<Sprites> = loader.load(
-        "texture/rough_sprites.ron", // Here we load the associated ron file
-    );
-    let sheet = SpriteSheet {
-        texture: texture_handle,
-        sprites,
-    };
-    let q = resources.get::<ProcessingQueue<SpriteSheet>>().unwrap();
-    loader.load_from_data(sheet, (), &q)
+fn initialise_player(world: &mut World, resources: &mut Resources) {
+    let mut player_transform = Transform::default();
+
+    player_transform.set_translation_xyz(0.0, 0.0, 0.0);
+
+    let player_char = PlayerCharacter::new(resources);
+    let start_sprite = SpriteRender::new(player_char.idle_spritesheet.clone(), 0);
+
+    world.push((player_char, player_transform, start_sprite));
 }

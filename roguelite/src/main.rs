@@ -1,5 +1,6 @@
 mod roguelite;
 mod systems;
+mod entities;
 mod bundle;
 
 use amethyst::{
