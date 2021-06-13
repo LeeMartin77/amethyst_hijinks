@@ -33,8 +33,8 @@ fn initialise_camera(world: &mut World, resources: &mut Resources) {
     let screen_width = resources.get::<ScreenDimensions>().unwrap().width();
     let screen_height = resources.get::<ScreenDimensions>().unwrap().height();
     transform.set_translation_xyz(0.0, 0.0, 1.0);
-
-    world.push((Camera::standard_2d(screen_width * 0.5, screen_height * 0.5), transform));
+    let scaling = 0.25;
+    world.push((Camera::standard_2d(screen_width * scaling, screen_height * scaling), transform));
 }
 
 
@@ -44,7 +44,7 @@ fn initialise_player(world: &mut World, resources: &mut Resources) {
     player_transform.set_translation_xyz(0.0, 0.0, 0.0);
 
     let player_char = PlayerCharacter::new(resources);
-    let start_sprite = SpriteRender::new(player_char.idle_spritesheet.clone(), 0);
+    let start_sprite = SpriteRender::new(player_char.spritesheet.clone(), 40);
 
     world.push((player_char, player_transform, start_sprite));
 }

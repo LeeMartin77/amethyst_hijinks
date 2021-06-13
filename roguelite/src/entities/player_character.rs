@@ -6,14 +6,14 @@ use amethyst::{
 };
 
 pub struct PlayerCharacter {
-    pub idle_spritesheet: Handle<SpriteSheet>,
+    pub spritesheet: Handle<SpriteSheet>,
 }
 
 impl PlayerCharacter {
     pub fn new(resources: &mut Resources) -> PlayerCharacter {
-        let idle_spritesheet = load_sprite_sheets(resources);
+        let spritesheet = load_sprite_sheets(resources);
         PlayerCharacter { 
-            idle_spritesheet: idle_spritesheet.clone()
+            spritesheet: spritesheet.clone()
         }
     }
 }
@@ -22,12 +22,12 @@ impl PlayerCharacter {
 fn load_sprite_sheets(resources: &mut Resources) -> Handle<SpriteSheet> {
     let texture_handle = {
         let loader = resources.get::<DefaultLoader>().unwrap();
-        loader.load("texture/metroidvania_sprites/herochar/herochar_idle_anim_strip_4.png")
+        loader.load("texture/metroidvania_sprites/herochar/herochar_spritesheet.png")
     };
 
     let loader = resources.get::<DefaultLoader>().unwrap();
     let sprites: Handle<Sprites> = loader.load(
-        "texture/metroidvania_sprites/herochar/herochar_idle_anim_strip_4.ron",
+        "texture/metroidvania_sprites/herochar/herochar_spritesheet.ron",
     );
     let sheet = SpriteSheet {
         texture: texture_handle,
