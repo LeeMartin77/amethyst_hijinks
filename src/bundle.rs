@@ -6,7 +6,8 @@ use amethyst::{
 
 
 use crate::systems::{
-    player_animation::PlayerAnimationSystem
+    player_animation::PlayerAnimationSystem,
+    player_movement::PlayerMovementSystem
 };
 
 /// A bundle is a convenient way to initialize related resources, components and systems in a
@@ -21,6 +22,7 @@ impl SystemBundle for RogueliteBundle {
         builder: &mut DispatcherBuilder,
     ) -> Result<(), Error> {
         builder
+            .add_system(PlayerMovementSystem::new())
             .add_system(PlayerAnimationSystem::new())
             .flush();
         Ok(())
