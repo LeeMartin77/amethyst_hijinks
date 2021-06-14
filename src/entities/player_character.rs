@@ -1,8 +1,7 @@
 use amethyst::{
     assets::{DefaultLoader, Handle, Loader, ProcessingQueue},
-    core::transform::Transform,
     prelude::*,
-    renderer::{sprite::Sprites, SpriteRender, SpriteSheet},
+    renderer::{sprite::Sprites, SpriteSheet},
 };
 
 pub struct PlayerCharacter {
